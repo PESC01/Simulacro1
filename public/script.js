@@ -1,21 +1,33 @@
 async function checkCode() {
-    const code = document.getElementById('accessCode').value;
-    const response = await fetch('/check-code', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ code: code })
-    });
-    const data = await response.json();
-    if (data.valid) {
-        document.getElementById('login').style.display = 'none';
-        document.getElementById('quiz').style.display = 'block';
-        loadQuestions();
-    } else {
-        alert('Código inválido o ya usado.');
-    }
+  const code = document.getElementById('accessCode').value;
+  try {
+      const response = await fetch('/check-code', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code: code })
+      });
+      
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      
+      if (data.valid) {
+          document.getElementById('login').style.display = 'none';
+          document.getElementById('quiz').style.display = 'block';
+          loadQuestions();
+      } else {
+          alert('Código inválido o ya usado.');
+      }
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      alert('Error al verificar el código. Por favor, intenta nuevamente más tarde.');
+  }
 }
+
 
 const questions = [
     {
