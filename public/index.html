@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Simulacro de Examen - Ascenso de Categoría del Magisterio 2024</h1>
+    <div id="login">
+        <h2>Ingrese su PIN de acceso</h2>
+        <input type="text" id="accessCode" placeholder="Ingrese sun PIN">
+        <button onclick="checkCode()">Acceder</button>
+    </div>
+    <div id="quiz" style="display:none;">
+        <h2>Examen de Simulacro</h2>
+        <h3>NORMATIVA GENERAL PARA SUBSISTEMA DE EDUCACIÓN REGULAR Y SUBSISTEMA DE EDUCACIÓN ALTERNATIVA Y ESPECIAL</h3>
+        <div id="questions"></div>
+        <button type="button" onclick="submitExam()">Enviar</button>
+    </div>
+    <div id="resultForm" style="display:none;">
+        <h2>Resultados del Examen</h2>
+        <div id="result"></div>
+        <div id="correctAnswers"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
