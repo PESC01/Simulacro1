@@ -8,24 +8,25 @@ async function checkCode() {
           },
           body: JSON.stringify({ code: code })
       });
-      
+
       if (!response.ok) {
           throw new Error('Network response was not ok');
       }
 
       const data = await response.json();
       
+     
       if (data.valid) {
-          document.getElementById('login').style.display = 'none';
-          document.getElementById('quiz').style.display = 'block';
-          loadQuestions();
-      } else {
-          alert('Código inválido o ya usado.');
-      }
-  } catch (error) {
-      console.error('Error fetching data:', error);
-      alert('Error al verificar el código. Por favor, intenta nuevamente más tarde.');
-  }
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('quiz').style.display = 'block';
+        loadQuestions();
+    } else {
+        alert('Código inválido o ya usado.');
+    }
+} catch (error) {
+    console.error('Error fetching data:', error);
+    alert('Error al verificar el código. Por favor, intenta nuevamente más tarde.');
+}
 }
 
 
@@ -568,66 +569,66 @@ const questions = [
 ];
 
 function loadQuestions() {
-    const questionsContainer = document.getElementById('questions');
-    questionsContainer.innerHTML = ''; // Limpiar el contenedor antes de cargar nuevas preguntas
-    questions.forEach((q, index) => {
-        if (q.type === 'subtitle') {
-            const subtitleHtml = `
-                <div class="subtitle">
-                    <h2>${q.subtitle}</h2>
-                </div>
-            `;
-            questionsContainer.innerHTML += subtitleHtml;
-        } else if (q.type === 'question') {
-            const questionHtml = `
-                <div class="question">
-                    <p><strong>Pregunta ${index + 1}:</strong> ${q.question}</p>
-                    <div class="options">
-                        ${q.options.map((option, i) => `
-                            <label>
-                                <input type="radio" name="q${index}" value="${i}">
-                                ${option}
-                            </label>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            questionsContainer.innerHTML += questionHtml;
-        }
-    });
+  const questionsContainer = document.getElementById('questions');
+  questionsContainer.innerHTML = '';
+  questions.forEach((q, index) => {
+      if (q.type === 'subtitle') {
+          const subtitleHtml = `
+              <div class="subtitle">
+                  <h2>${q.subtitle}</h2>
+              </div>
+          `;
+          questionsContainer.innerHTML += subtitleHtml;
+      } else if (q.type === 'question') {
+          const questionHtml = `
+              <div class="question">
+                  <p><strong>Pregunta ${index + 1}:</strong> ${q.question}</p>
+                  <div class="options">
+                      ${q.options.map((option, i) => `
+                          <label>
+                              <input type="radio" name="q${index}" value="${i}">
+                              ${option}
+                          </label>
+                      `).join('')}
+                  </div>
+              </div>
+          `;
+          questionsContainer.innerHTML += questionHtml;
+      }
+  });
 }
 
 function submitExam() {
-    let score = 0;
-    let questionNumber = 1; // Contador de preguntas para las respuestas
-    let answersHtml = '<h3>Respuestas correctas:</h3>';
-    questions.forEach((q, index) => {
-        if (q.type === 'question') {
-            const selected = document.querySelector(`input[name="q${index}"]:checked`);
-            const userAnswer = selected ? parseInt(selected.value) : -1;
-            if (userAnswer === q.correctAnswer) {
-                score++;
-            }
-            answersHtml += `
-                <p><strong>Pregunta ${questionNumber}:</strong> ${q.question}</p>
-                <ul>
-                    ${q.options.map((option, i) => `
-                        <li class="${i === q.correctAnswer ? 'correct' : (i === userAnswer && i !== q.correctAnswer ? 'incorrect' : '')}">${option}</li>
-                    `).join('')}
-                </ul>
-            `;
-            questionNumber++; // Incrementar el contador de preguntas
-        }
-    });
-    const resultPercentage = (score / questions.filter(q => q.type === 'question').length) * 100;
-    document.getElementById('result').innerHTML = `Tu puntuación: ${score}/${questions.filter(q => q.type === 'question').length} (${resultPercentage.toFixed(2)}%)`;
-    document.getElementById('correctAnswers').innerHTML = answersHtml;
-    const examForm = document.getElementById('quiz');
-    const resultForm = document.getElementById('resultForm');
-    if (examForm) {
-        examForm.style.display = 'none'; // Ocultar el examen después de enviarlo
-    }
-    if (resultForm) {
-        resultForm.style.display = 'block'; // Mostrar los resultados
-    }
+  let score = 0;
+  let questionNumber = 1;
+  let answersHtml = '<h3>Respuestas correctas:</h3>';
+  questions.forEach((q, index) => {
+      if (q.type === 'question') {
+          const selected = document.querySelector(`input[name="q${index}"]:checked`);
+          const userAnswer = selected ? parseInt(selected.value) : -1;
+          if (userAnswer === q.correctAnswer) {
+              score++;
+          }
+          answersHtml += `
+              <p><strong>Pregunta ${questionNumber}:</strong> ${q.question}</p>
+              <ul>
+                  ${q.options.map((option, i) => `
+                      <li class="${i === q.correctAnswer ? 'correct' : (i === userAnswer && i !== q.correctAnswer ? 'incorrect' : '')}">${option}</li>
+                  `).join('')}
+              </ul>
+          `;
+          questionNumber++;
+      }
+  });
+  const resultPercentage = (score / questions.filter(q => q.type === 'question').length) * 100;
+  document.getElementById('result').innerHTML = `Tu puntuación: ${score}/${questions.filter(q => q.type === 'question').length} (${resultPercentage.toFixed(2)}%)`;
+  document.getElementById('correctAnswers').innerHTML = answersHtml;
+  const examForm = document.getElementById('quiz');
+  const resultForm = document.getElementById('resultForm');
+  if (examForm) {
+      examForm.style.display = 'none';
+  }
+  if (resultForm) {
+      resultForm.style.display = 'block';
+  }
 }

@@ -7,7 +7,6 @@ const app = express();
 app.use(bodyParser.json());
 
 const dataPath = path.join(__dirname, 'data');
-const correctAnswers = { q1: "respuesta1", q2: "respuesta2" };
 const codesFilePath = path.join(dataPath, 'codes.json');
 
 app.post('/check-code', (req, res) => {
@@ -16,7 +15,7 @@ app.post('/check-code', (req, res) => {
         const codes = JSON.parse(fs.readFileSync(codesFilePath));
         if (codes[code]) {
             delete codes[code];
-            fs.writeFileSync(codesFilePath, JSON.stringify(codes));
+            fs.writeFileSync(codesFilePath, JSON.stringify(codes, null, 2));
             res.json({ valid: true });
         } else {
             res.json({ valid: false });
@@ -27,10 +26,8 @@ app.post('/check-code', (req, res) => {
     }
 });
 
-// Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
