@@ -13,7 +13,7 @@ async function checkCode() {
           throw new Error('Network response was not ok');
       }
 
-      
+      const data = await response.json();
       
      
       if (data.valid) {
