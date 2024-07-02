@@ -27,8 +27,11 @@ app.post('/check-code', (req, res) => {
     }
 });
 
+// Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(3000, () => {
-    console.log('Servidor corriendo en http://localhost:3000');
+// Iniciar el servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
