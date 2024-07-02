@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises; // Importa fs con soporte para promesas
 const path = require('path');
 const bodyParser = require('body-parser');
 
@@ -9,13 +9,15 @@ app.use(bodyParser.json());
 const dataPath = path.join(__dirname, 'data');
 const codesFilePath = path.join(dataPath, 'codes.json');
 
-app.post('/check-code', (req, res) => {
+app.post('/check-code', async (req, res) => {
     const code = req.body.code;
     try {
-        const codes = JSON.parse(fs.readFileSync(codesFilePath));
+        let data = await fs.readFile(codesFilePath, 'utf8');
+        let codes = JSON.parse(data);
+
         if (codes[code]) {
             delete codes[code];
-            fs.writeFileSync(codesFilePath, JSON.stringify(codes));
+            await fs.writeFile(codesFilePath, JSON.stringify(codes));
             res.json({ valid: true });
         } else {
             res.json({ valid: false });
