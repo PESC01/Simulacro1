@@ -11,22 +11,20 @@ const correctAnswers = { q1: "respuesta1", q2: "respuesta2" };
 const codesFilePath = path.join(dataPath, 'codes.json');
 
 app.post('/check-code', (req, res) => {
+    console.log('Recibida solicitud para verificar código:', req.body);
     const code = req.body.code;
     try {
         const codes = JSON.parse(fs.readFileSync(codesFilePath));
         if (codes[code]) {
-            delete codes[code];
-            fs.writeFileSync(codesFilePath, JSON.stringify(codes));
             res.json({ valid: true });
         } else {
             res.json({ valid: false });
         }
     } catch (error) {
-        console.error('Error al leer o manipular codes.json:', error);
+        console.error('Error al leer codes.json:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-
 // Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
