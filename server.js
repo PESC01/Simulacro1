@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
-const dataPath = path.join(__dirname, 'public');
+const dataPath = path.join(__dirname, 'data');
 const codesFilePath = path.join(dataPath, 'codes.json');
 
 app.post('/check-code', (req, res) => {
@@ -15,7 +15,7 @@ app.post('/check-code', (req, res) => {
         const codes = JSON.parse(fs.readFileSync(codesFilePath));
         if (codes[code]) {
             delete codes[code];
-            fs.writeFileSync(codesFilePath, JSON.stringify(codes, null, 2));
+            fs.writeFileSync(codesFilePath, JSON.stringify(codes));
             res.json({ valid: true });
         } else {
             res.json({ valid: false });
@@ -26,8 +26,24 @@ app.post('/check-code', (req, res) => {
     }
 });
 
+// Ruta para servir archivos de manera dinámica
+app.get('/data/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(dataPath, filename);
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            res.status(404).send('Archivo no encontrado');
+        } else {
+            res.sendFile(filePath);
+        }
+    });
+});
+
+// Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
