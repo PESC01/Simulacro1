@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
-const dataPath = path.join(__dirname, 'data');
+const dataPath = path.join(__dirname, 'public');
 const codesFilePath = path.join(dataPath, 'codes.json');
 
 app.post('/check-code', (req, res) => {
